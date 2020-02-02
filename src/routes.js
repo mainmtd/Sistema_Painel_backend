@@ -13,6 +13,8 @@ routes.put('/painel/:id', PainelController.update);
 
 routes.post('/user/create', UserController.create);
 routes.get('/user/', UserController.index);
+routes.put('/user/:id', UserController.update);
+routes.delete('/user/:id', UserController.destroy);
 
 routes.post('/user/authenticate', AuthController.authenticate);
 

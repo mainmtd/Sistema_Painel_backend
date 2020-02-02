@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 const authConfig = require('../config/auth');
+const bcrypt = require('bcryptjs');
 
 const router = express.Router();
 
@@ -20,11 +21,11 @@ module.exports = {
 
             usuario.password = undefined;
             
-            const token = jwt.sign({ id: usuario.id }, authConfig.secret, {
-                expiresIn: 86400,
-            } );
+            // const token = jwt.sign({ id: usuario.id }, authConfig.secret, {
+            //     expiresIn: 86400,
+            // } );
 
-            return res.send({usuario, token});
+            return res.send(usuario);
             
         } catch (err){
             return res.status(400).send({error: 'Registration failed'});
@@ -36,6 +37,24 @@ module.exports = {
 
         return res.json(users);
     },
+
+    async update(req, res, next){
+        const {password} = req.body;
+
+        bcrypt.hash(password, 10, async function(err, hash){
+            req.body.password = hash;
+
+            
+            const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+            return res.json(user);
+        });
+    },
+
+    async destroy(req, res){
+        await User.findByIdAndRemove(req.params.id);
+
+        return res.send();
+    }
 }
 
 

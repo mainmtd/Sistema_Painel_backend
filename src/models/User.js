@@ -25,11 +25,11 @@ const UserSchema = mongoose.Schema({
 //criptografia da senha
 //executa uma função antes de salvar
 UserSchema.pre('save', async function(next){
-    //o número 10 se refere à força da criptografia
-    const hash = await bcrypt.hash(this.password, 10);
+    const hash =   await bcrypt.hash(this.password, 10);
     this.password = hash;
-    
+
     next();
+    
 })
 
 const User = mongoose.model('User', UserSchema)
